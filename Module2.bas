@@ -477,7 +477,7 @@ On Error GoTo errhandler
 
 'path designations
 ''''''''''''''''''
-costBookPath = "K:\EnglandT\MATEER\QUOTES"
+costBookPath = ThisWorkbook.Path
 priceBookPath = costBookPath
 ''''''''''''''''''
 'path designations
@@ -639,7 +639,7 @@ On Error GoTo errhandler
 'path designations
 ''''''''''''''''''
 augWbPath = "K:\EnglandT\MATEER"
-costBookPath = "K:\EnglandT\MATEER\QUOTES"
+costBookPath = ThisWorkbook.Path
 priceBookPath = costBookPath
 ''''''''''''''''''
 'path designations
