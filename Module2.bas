@@ -707,6 +707,7 @@ If Not toolingSpec Then
         End If
         i = i + 1
     Loop
+    MsgBox "Alpha: ENG rate = " & engRate
     
     x = True 'find the labor rates (MFG)
     i = 1
@@ -929,6 +930,7 @@ Do While x = True And j < 10
     End If
     j = j + 1
 Loop
+MsgBox "Beta: ENG rate = " & engRate
 
 x = True 'find the labor rates (MFG)
 j = 1
