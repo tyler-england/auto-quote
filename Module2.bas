@@ -7,7 +7,7 @@ If Range("M5").Value > 0 Then
     On Error Resume Next
     Set wB = Workbooks("Test_wkbk.xlsx")
     If wB Is Nothing Then
-        Set wB = Workbooks.Open(Filename:="C:\Users\englandt\Desktop\scratch\Test_wkbk.xlsx")
+        Set wB = Workbooks.Open(Filename:=Environ("UserProfile") & "\Desktop\scratch\Test_wkbk.xlsx")
     End If
     On Error GoTo 0
 End If
@@ -25,7 +25,7 @@ Function ToolingPricing(wB As Workbook)
 Dim nuM As Integer, i As Integer, x As Boolean
 Dim augWB As Workbook, augWbPath As String
 
-augWbPath = "K:\EnglandT\MATEER"
+augWbPath = "https://bw1-my.sharepoint.com/personal/tyler_england_bwpackagingsystems_com/Documents/Tools"
 'path for Auger Output Data workbook
 
 Application.ScreenUpdating = False
@@ -65,10 +65,15 @@ If Range("M5").Value > 0 Then
     x = True
     
     On Error Resume Next
-    Set augWB = Workbooks("Auger Output Data.xlsx")
+    Set augWB = Workbooks("Mateer_Auger_Output_Data.xlsx")
     If augWB Is Nothing Then
-        Set augWB = Workbooks.Open(Filename:=augWbPath & "\Auger Output Data.xlsx")
+        If InStr(augWbPath, "\") > 0 Then
+            Set augWB = Workbooks.Open(Filename:=augWbPath & "\Mateer_Auger_Output_Data.xlsx")
+        ElseIf InStr(augWbPath, "/") > 0 Then
+            Set augWB = Workbooks.Open(Filename:=augWbPath & "/Mateer_Auger_Output_Data.xlsx")
+        End If
     End If
+    If augWB Is Nothing Then MsgBox "You don't have access to the Auger Output Data workbook. It is located here:" & vbCrLf & vbCrLf & augWbPath
     On Error GoTo errhandler
     
     If nuM > 0 Then
@@ -477,7 +482,7 @@ On Error GoTo errhandler
 
 'path designations
 ''''''''''''''''''
-costBookPath = ThisWorkbook.Path
+costBookPath = "\\PSACLW02\Home\Applications\Applications-Docs\Pricing\Mateer\"
 priceBookPath = costBookPath
 ''''''''''''''''''
 'path designations
@@ -487,11 +492,11 @@ Application.ScreenUpdating = False
 On Error Resume Next
     Set costBook = Workbooks("CostBook_Mateer.xlsm")
     If costBook Is Nothing Then
-        Set costBook = Workbooks.Open(Filename:=costBookPath & "\CostBook_Mateer.xlsm")
+        Set costBook = Workbooks.Open(Filename:=costBookPath & Dir(costBookPath & "*cost*.xls*"))
     End If
     Set priceBook = Workbooks("PriceBook_Mateer.xlsm")
     If priceBook Is Nothing Then
-        Set priceBook = Workbooks.Open(Filename:=priceBookPath & "\PriceBook_Mateer.xlsm")
+        Set priceBook = Workbooks.Open(Filename:=priceBookPath & Dir(priceBookPath & "*price*.xls*"))
     End If
 On Error GoTo errhandler
 
@@ -638,8 +643,8 @@ On Error GoTo errhandler
 
 'path designations
 ''''''''''''''''''
-augWbPath = "K:\EnglandT\MATEER"
-costBookPath = ThisWorkbook.Path
+augWbPath = "bw1-my.sharepoint.com/personal/tyler_england_bwpackagingsystems_com/Documents/Tools"
+costBookPath = "\\PSACLW02\Home\Applications\Applications-Docs\Pricing\Mateer\"
 priceBookPath = costBookPath
 ''''''''''''''''''
 'path designations
@@ -693,7 +698,7 @@ If Not toolingSpec Then
     End If
     Set priceBook = Workbooks("PriceBook_Mateer.xlsm")
     If priceBook Is Nothing Then
-        Set priceBook = Workbooks.Open(Filename:=priceBookPath & "\PriceBook_Mateer.xlsm")
+        Set priceBook = Workbooks.Open(Filename:=priceBookPath & Dir(priceBookPath & "*pricebook*.xls*"))
     End If
     On Error GoTo errhandler
     
@@ -707,7 +712,6 @@ If Not toolingSpec Then
         End If
         i = i + 1
     Loop
-    MsgBox "Alpha: ENG rate = " & engRate
     
     x = True 'find the labor rates (MFG)
     i = 1
@@ -821,10 +825,15 @@ Else
         
         x = True
         On Error Resume Next
-        Set augWB = Workbooks("Auger Output Data.xlsx")
+        Set augWB = Workbooks("Mateer_Auger_Output_Data.xlsx")
         If augWB Is Nothing Then
-            Set augWB = Workbooks.Open(Filename:=augWbPath & "\Auger Output Data.xlsx")
+            If InStr(augWbPath, "/") > 0 Then
+                Set augWB = Workbooks.Open(Filename:=augWbPath & "/" & Mateer_Auger_Output_Data.xlsx)
+            Else
+                Set augWB = Workbooks.Open(Filename:=augWbPath & "\" & Dir(augWbPath & "\" & "*auger*.xls*"))
+            End If
         End If
+        If augWB Is Nothing Then MsgBox "Unable to open Auger Output Data workbook. Located here:" & vbCrLf & vbCrLf & augWbPath
         On Error GoTo errhandler
         
         ThisWorkbook.Activate
@@ -834,7 +843,6 @@ Else
                 x = FindTooling(i, wB, augWB)
             End If
         Next
-        
         
         augWB.Close savechanges:=False
         
@@ -930,7 +938,6 @@ Do While x = True And j < 10
     End If
     j = j + 1
 Loop
-MsgBox "Beta: ENG rate = " & engRate
 
 x = True 'find the labor rates (MFG)
 j = 1

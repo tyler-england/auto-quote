@@ -29,6 +29,11 @@ Public Sub SetClipboard(sUniText As String)
     SetClipboardData CF_UNICODETEXT, iStrPtr
     CloseClipboard
 End Sub
+Sub PasteAsValue() 'to force a paste to refrain from ruining formatting
+Attribute PasteAsValue.VB_ProcData.VB_Invoke_Func = "v\n14"
+On Error Resume Next
+Selection.PasteSpecial Paste:=xlPasteValues
+End Sub
 
 Sub Populate_Quote()
 '
@@ -124,19 +129,16 @@ Sub Populate_Pricing()
     wkSht.Range("A1").Formula = "=LEFT(C4,12)"
 
     oQuote = wkSht.Range("A1").Value
-    wkSht.Range("A1").Formula = "=LEN(C4)"
-    qLength = wkSht.Range("A1").Value
-    Range("A1").Formula = "=LEFT(C4,2)"
-    yeaR = "20" & Range("A1").Value
-    wkSht.Range("A1").Clear
+    qLength = Len(wkSht.Range("C4").Value)
+    yeaR = "20" & Left(wkSht.Range("C4").Value, 2)
     partnerProp = Range("G16").Value
     partnerDir = Range("G17").Value
     newRev = False
 
     'path designations
    ''''''''''''''''''
-    templPath = "K:\EnglandT\MATEER\QUOTES\Quote Templates\"
-    quoteFolderPath = "T:\Quotes\Mateer\" & yeaR & " Quotes"
+    templPath = "\\PSACLW02\Home\Applications\Applications-Docs\Templates\Mateer\"
+    quoteFolderPath = "\\PSACLW02\HOME\Applications\Applications-Share\Quotes\Mateer\" & yeaR & " Quotes"
    ''''''''''''''''''
    'path designations
     
@@ -160,7 +162,7 @@ Sub Populate_Pricing()
         templFile = "AM_Pricing"
     End If
 
-    preEx = Dir$(templPath & templFile & ".xlsx")
+    preEx = Dir$(templPath & Dir(templPath & templFile & "*.xls*"))
     
     If preEx = "" Then
         
@@ -177,7 +179,7 @@ Sub Populate_Pricing()
         Set wbNew = Workbooks.Open(Filename:=templPath & templFile & ".xlsx", UpdateLinks:=True)
     End If
     On Error GoTo errhandler
-
+    
     preEx = Dir$(quoteFolderPath & "*", vbDirectory)
     'check for umbrella quote folder
     
@@ -407,7 +409,7 @@ Sub Populate_Pricing()
     Exit Sub
     
 errhandler:     MsgBox "unspecified error"
-
+MsgBox Err.Number & vbCrLf & vbCrLf & Err.Description
 End Sub
 
 
@@ -484,8 +486,8 @@ Sub Populate_AM_Quote()
     
    'path designations
    ''''''''''''''''''
-   templPath = "K:\EnglandT\MATEER\QUOTES\Quote Templates"
-   quoteFolderPath = "T:\Quotes\Mateer\" & yeaR & " Quotes"
+    templPath = "\\PSACLW02\Home\Applications\Applications-Docs\Templates\Mateer\"
+    quoteFolderPath = "\\PSACLW02\HOME\Applications\Applications-Share\Quotes\Mateer\" & yeaR & " Quotes"
    ''''''''''''''''''
    'path designations
  
@@ -600,7 +602,7 @@ Sub Populate_AM_Quote()
     preExInd = Dir$(quoteFolderPath & "\" & oQuote & "*", vbDirectory)
     newDocName = quoteFolderPath & "\" & preExInd & "\" & quotE & "-" & typ & "-" & company1 & "-" & modeL & ".docx"
     
-    If Dir(templPath & "\Aftermarket_Quote_Template.dotx") = "" Then
+    If Dir(templPath & "Aftermarket_Quote_Template.dotx") = "" Then
         MsgBox "Must create template..." & vbCrLf & "Aftermarket_Quote_Template.dotx" & vbCrLf & vbCrLf & "This file must be in folder..." & vbCrLf & templPath
         ActiveSheet.Protect
         Sheet1.Activate
@@ -612,7 +614,7 @@ Sub Populate_AM_Quote()
     If Range("G4").Value = True Then
     
         'check for budgetary template
-        If Dir(templPath & "\Budgetary_Quote_Template.dotx") = "" Then
+        If Dir(templPath & "Budgetary_Quote_Template.dotx") = "" Then
             MsgBox "Must create template..." & vbCrLf & "Budgetary_Quote_Template.dotx" & vbCrLf & vbCrLf & "This file must be in folder..." & vbCrLf & templPath
             ActiveSheet.Protect
             Sheet1.Activate
@@ -620,11 +622,11 @@ Sub Populate_AM_Quote()
             Application.ScreenUpdating = True
             Exit Sub
         Else
-            Set wDoc = wApp.Documents.Add(template:=templPath & "\Budgetary_Quote_Template.dotx", NewTemplate:=False, DocumentType:=0)
+            Set wDoc = wApp.Documents.Add(template:=templPath & "Budgetary_Quote_Template.dotx", NewTemplate:=False, DocumentType:=0)
         End If
         
     Else
-        Set wDoc = wApp.Documents.Add(template:=templPath & "\Aftermarket_Quote_Template.dotx", NewTemplate:=False, DocumentType:=0)
+        Set wDoc = wApp.Documents.Add(template:=templPath & "Aftermarket_Quote_Template.dotx", NewTemplate:=False, DocumentType:=0)
     
     End If
 
@@ -727,8 +729,8 @@ Attribute Populate_NM_Quote.VB_ProcData.VB_Invoke_Func = " \n14"
     
    'path designations
    ''''''''''''''''''
-   templPath = "K:\EnglandT\MATEER\QUOTES\Quote Templates"
-   quoteFolderPath = "T:\Quotes\Mateer\" & yeaR & " Quotes"
+    templPath = "\\PSACLW02\Home\Applications\Applications-Docs\Templates\Mateer\"
+    quoteFolderPath = "\\PSACLW02\HOME\Applications\Applications-Share\Quotes\Mateer\" & yeaR & " Quotes"
    ''''''''''''''''''
    'path designations
    
@@ -822,7 +824,7 @@ Attribute Populate_NM_Quote.VB_ProcData.VB_Invoke_Func = " \n14"
     preExInd = Dir$(quoteFolderPath & "\" & oQuote & "*", vbDirectory)
     newDocName = quoteFolderPath & "\" & preExInd & "\" & quotE & "-" & typ & "-" & company1 & "-" & model1 & ".docx"
 
-    If Dir(templPath & "\New_Quote_Template.docm") = "" Then
+    If Dir(templPath & "New_Quote_Template.docm") = "" Then
         MsgBox "Must create template..." & vbCrLf & "New_Quote_Template.docm" & vbCrLf & vbCrLf & "This file must be in folder..." & vbCrLf & templPath
         Range("A1").Select
         Application.ScreenUpdating = True
@@ -832,26 +834,23 @@ Attribute Populate_NM_Quote.VB_ProcData.VB_Invoke_Func = " \n14"
     
     On Error Resume Next
     'set correct photo based on model
-    Range("C1").Formula = "=LEFT(C6,2)"
-    imageFile = Dir(templPath & "\Images\" & Range("C1").Value & "*.jpg")
+    imageFile = Dir(templPath & "Images\" & Left(Range("C1").Value, 2) & "*.jpg")
     
     If imageFile > "" Then
         imageFile = templPath & "\Images\" & imageFile
         
         'belt driven / direct driven
-        Range("C2").Formula = "=RIGHT(LEFT(C6,5),1)"
-        
-        If Range("C2").Value = "D" Then
+        If UCase(Right(Left(Range("C6").Value, 5), 1)) = "D" Then
             'check for Direct servo photo
-            tempStr = Dir(templPath & "\Images\" & Range("C1").Value & "*D*.jpg")
+            tempStr = Dir(templPath & "Images\" & Range("C1").Value & "*D*.jpg")
             If tempStr > "" Then
-                imageFile = templPath & "\Images\" & tempStr
+                imageFile = templPath & "Images\" & tempStr
             End If
-        ElseIf Range("C2").Value = "B" Then
+        ElseIf UCase(Right(Left(Range("C6").Value, 5), 1)) = "B" Then
             'check for belt servo photo
-            tempStr = Dir(templPath & "\Images\" & Range("C1").Value & "*B*.jpg")
+            tempStr = Dir(templPath & "Images\" & Range("C1").Value & "*B*.jpg")
             If tempStr > "" Then
-                imageFile = templPath & "\Images\" & tempStr
+                imageFile = templPath & "Images\" & tempStr
             End If
         End If
         
@@ -861,7 +860,7 @@ Attribute Populate_NM_Quote.VB_ProcData.VB_Invoke_Func = " \n14"
         MsgBox "Error inserting image of the machine"
     End If
     
-    Set wDoc = wApp.Documents.Add(template:=templPath & "\New_Quote_Template.docm", NewTemplate:=False, DocumentType:=0)
+    Set wDoc = wApp.Documents.Add(template:=templPath & "New_Quote_Template.docm", NewTemplate:=False, DocumentType:=0)
     wApp.Visible = True
 
     wDoc.Bookmarks("ModelPic").Range _
@@ -1075,8 +1074,7 @@ Sheet4.Unprotect
 Sheet4.AutoFilterMode = False
 Sheet4.Range("$D:$D").AutoFilter Field:=1, Criteria1:="<>0"
 Range("B3").Select
-Range(Selection, Selection.End(xlDown)).Select
-Selection.Copy
+Range(Selection, Selection.End(xlDown)).Copy
 
 Sheet1.Activate
 Range("C20").Select
@@ -1084,14 +1082,9 @@ Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
 :=False, Transpose:=False
 
 Sheet4.Activate
-Range("C1").Value = machine1
-'machine1 is either rotary or non-rotary
-Range("B1").Formula = "=match(C1,A:A,0)"
-Row = Range("B1").Value
-
+Row = WorksheetFunction.Match(machine1, Sheet4.Range("A:A"), 0)
 Range("B" & Row).Select
-Range(Selection, Selection.End(xlDown)).Select
-Selection.Copy
+Range(Selection, Selection.End(xlDown)).Copy
 
 Sheet1.Activate
 Range("G9").Select
@@ -1102,13 +1095,10 @@ If machine2 > "" Then
     
     'means non-rotary... machine2 is semiautomatic or automatic
     Sheet4.Activate
-    Range("C1").Value = machine2
-    Range("B1").Formula = "=match(C1,A:A,0)"
-    Row = Range("B1").Value
+    Row = WorksheetFunction.Match(machine2, Sheet4.Range("A:A"), 0)
 
     Range("B" & Row).Select
-    Range(Selection, Selection.End(xlDown)).Select
-    Selection.Copy
+    Range(Selection, Selection.End(xlDown)).Copy
 
     Sheet1.Activate
     Range("G9").Select

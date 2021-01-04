@@ -651,16 +651,24 @@ Dim outlookApp As Object, eMail As MailItem, testInspect As Inspector
 Dim numEmails As Integer, nameArray() As String, senderSurname As String, emailContent As String
 Dim emailFound As Boolean, emailLines As Variant, i As Integer, startRow As Integer
 
-wbPath = "\\PSACLW02\PROJDATA\ENGLANDT\MATEER\QUOTES\"
-templFile = "Cost_Estimate_Form.xlsm"
+'''''''''''''''
+wbPath = "\\PSACLW02\Home\Applications\Applications-Docs\Templates\Mateer\"
+templFile = Dir(wbPath & "*estimate*.xls*")
+'''''''''''''''
 
 'see if form is required
 msg = "Do you want to create a cost estimate form for this quote?"
 ans = MsgBox(msg, vbYesNo, "Cost Estimate Form")
 
 If ans = vbYes Then 'create form
-    If Right(destPath, 1) <> "\" Then
-        destPath = destPath & "\"
+    If InStr(destPath, "\") > 0 Then
+        If Right(destPath, 1) <> "\" Then
+            destPath = destPath & "\"
+        End If
+    ElseIf InStr(destPath, "/") > 0 Then
+        If Right(destPath, 1) <> "/" Then
+            destPath = destPath & "/"
+        End If
     End If
     newWbName = destPath & "Cost_Estimate-" & quoteNum & ".xlsm"
     

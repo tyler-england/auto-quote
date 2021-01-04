@@ -50,12 +50,6 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             
         ElseIf heads = 2 Then
         '2 heads
-'            Range("D18").Select
-'            Selection.Copy
-'            Range("D14").Select
-'            Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
-'                SkipBlanks:=False, Transpose:=False
-'            Application.CutCopyMode = False
             'does not require VFFS answer
             Range("D13").Interior.ColorIndex = 0
             Range("D13").ClearFormats
@@ -76,16 +70,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         
         End If
         
-        If Sheet3.Range("C21").Value = 2 Then
-            'rotary
-            
-'            Range("C18").Select
-'            Selection.Copy
-'            Range("C14").Select
-'            Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
-'                SkipBlanks:=False, Transpose:=False
-'            Application.CutCopyMode = False
-'            Range("C14").Formula = "No"
+        If Sheet3.Range("C21").Value = 2 Then 'rotary
             
             Range("D12").Select
             Selection.Copy
@@ -104,33 +89,22 @@ Private Sub Worksheet_Change(ByVal Target As Range)
                 Range("D15").Borders.LineStyle = xlContinuous
                 Range("D15").Formula = "N/A"
                 Range("D15").HorizontalAlignment = xlCenter
-'                Range("D18").Select
-'                Selection.Copy
-'                Range("D16").Select
-'                Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
-'                    SkipBlanks:=False, Transpose:=False
-'                Application.CutCopyMode = False
             End If
             
         ElseIf Sheet3.Range("C21").Value <> 2 Then
-'            Range("C15").Select
-'            Selection.Copy
             Range("D14:D16").Select
             Selection.Interior.ColorIndex = 0
             Selection.ClearFormats
             Selection.HorizontalAlignment = xlCenter
             Range("D13").HorizontalAlignment = xlCenter
             Selection.Borders.LineStyle = xlContinuous
-'            Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
-'                SkipBlanks:=False, Transpose:=False
-'            Application.CutCopyMode = False
             Range("D14").Formula = "N/A"
             Range("D15").Formula = "N/A"
             Range("D16").Formula = "N/A"
             
         End If
         
-        If (Range("D5").Value = "am" Or Range("D5").Value = "AM" Or Range("D5").Value = "Am" Or Range("D5").Value = "aM") Then
+        If UCase(Range("D5").Value) = "AM" Then
         'AM quote
             
             Range("D13").Clear
@@ -141,15 +115,11 @@ Private Sub Worksheet_Change(ByVal Target As Range)
                 SkipBlanks:=False, Transpose:=False
             Application.CutCopyMode = False
             
-'            Range("D18").Select
-'            Selection.Copy
             Range("D14:D16").Select
             Selection.ClearFormats
             Selection.Borders.LineStyle = xlContinuous
             Selection.Interior.ColorIndex = 0
-'            Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
-'                SkipBlanks:=False, Transpose:=False
-'            Application.CutCopyMode = False
+
             'does not require VFFS answer
             Range("D14").Formula = "N/A"
             Range("D15").Formula = "N/A"
@@ -176,7 +146,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             Range("G9:K9").Merge
             Range("F9:K9").Borders.LineStyle = xlContinuous
             
-        ElseIf Range("D6").Value > "" Then
+        ElseIf Range("D6").Value <> "" Then
     
             Call Options(machine1, machine2, heads)
             'populates machine specific options
