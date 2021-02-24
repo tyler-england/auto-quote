@@ -91,6 +91,7 @@ Sub Populate_Pricing()
     Dim origText As String, newText As String, steelType As String, namePos As Integer
     Dim templPath As String, quoteFolderPath As String, newRev As Boolean
     Dim pW As String, sN As String, salesRep As String, i As Integer
+    Dim siMachPrice As Single, siCostENG As Single, siCostASY As Single
 
     pW = InputBox("Enter password to use this function", "Password Required")
     
@@ -304,6 +305,21 @@ Sub Populate_Pricing()
             
     Next i
     On Error GoTo errhandler
+    
+    siMachPrice = ThisWorkbook.Worksheets(4).Range("P3").Value
+    siCostENG = ThisWorkbook.Worksheets(4).Range("S1").Value
+    siCostASY = ThisWorkbook.Worksheets(4).Range("T1").Value
+    
+    If templFile = "Pricing_Template" Then Range("F7").Value = siMachPrice 'fill in base machine price
+    
+    'fill in labor rates
+    If templFile = "Pricing_Template" Then
+        Range("M1").Value = siCostENG
+        Range("N1").Value = siCostASY
+    Else
+        Range("D3").Value = siCostENG
+        Range("E3").Value = siCostASY
+    End If
     
     If partnerDir > 0 Then
         If templFile = "Pricing_Template" Then

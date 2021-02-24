@@ -16,6 +16,7 @@ End Sub
 Private Sub Workbook_Open()
 On Error Resume Next
     Application.EnableAutoComplete = False
+    ThisWorkbook.AutoSaveOn = False
 End Sub
 
 Private Sub Workbook_WindowActivate(ByVal Wn As Window)

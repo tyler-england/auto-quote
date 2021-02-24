@@ -25,7 +25,7 @@ Function ToolingPricing(wB As Workbook)
 Dim nuM As Integer, i As Integer, x As Boolean
 Dim augWB As Workbook, augWbPath As String
 
-augWbPath = "https://bw1-my.sharepoint.com/personal/tyler_england_bwpackagingsystems_com/Documents/Tools"
+augWbPath = "\\Psaclw02\Home\Applications\Applications-Share\Quotes\Mateer\Templates\Calculators"
 'path for Auger Output Data workbook
 
 Application.ScreenUpdating = False
@@ -72,6 +72,9 @@ If Range("M5").Value > 0 Then
         ElseIf InStr(augWbPath, "/") > 0 Then
             Set augWB = Workbooks.Open(Filename:=augWbPath & "/Mateer_Auger_Output_Data.xlsx")
         End If
+    End If
+    If augWB Is Nothing Then
+        Set augWB = Workbooks.Open(Filename:=augWbPath & "\" & Dir(augWbPath & "\*auger*output*.xls*"))
     End If
     If augWB Is Nothing Then MsgBox "You don't have access to the Auger Output Data workbook. It is located here:" & vbCrLf & vbCrLf & augWbPath
     On Error GoTo errhandler
@@ -521,10 +524,16 @@ If templFile = "Pricing_Template" Then
             Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
             
             wB.Worksheets("Tooling").Activate
-
             For i = 3 To lastRow
                 Call ToolingLineItem(i, steelType, wB, costBook, priceBook, templFile)
             Next
+
+            wB.Worksheets(1).Activate
+            i = 11
+            Do While Left(Range("A" & i).Value, 1) = "#"
+                Range("F" & i).Formula = "=P" & i & "/.8"
+                i = i + 1
+            Loop
             
         End If
         
