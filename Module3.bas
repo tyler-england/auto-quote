@@ -1,7 +1,7 @@
 Attribute VB_Name = "Module3"
 Public Function CopyEmailWkbks(oQuote As String, yeaR As Integer)
 
-Dim quoteFolderPath As String, i As Integer, salesRep As String, nameArray() As String, customeR As String
+Dim quoteFolderPath As String, i As Integer, salesRep As String, nameArray() As String, quotE As String
 Dim outlookApp As Object, eMail As MailItem, testInspect As Inspector, numEmails As Integer, senderSurname As String
 Dim emailContent As String, emailFound As Boolean
 
@@ -44,7 +44,7 @@ End If
 ThisWorkbook.Activate
 Sheet3.Activate
 salesRep = Range("C7").Value
-customeR = Range("C8").Value
+quotE = Range("C4").Value
 nameArray() = Split(salesRep)
 salesRep = nameArray(1)
 emailFound = False
@@ -61,7 +61,7 @@ For i = 1 To numEmails
     If eMail.Sent Then
         If senderSurname = salesRep Then
             emailContent = eMail.Body
-            If InStr(1, emailContent, customeR) > 0 Then
+            If InStr(1, emailContent, quotE) > 0 Then
                 emailFound = True
                 Exit For
             End If

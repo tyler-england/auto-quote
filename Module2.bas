@@ -77,6 +77,7 @@ If Range("M5").Value > 0 Then
         Set augWB = Workbooks.Open(Filename:=augWbPath & "\" & Dir(augWbPath & "\*auger*output*.xls*"))
     End If
     If augWB Is Nothing Then MsgBox "You don't have access to the Auger Output Data workbook. It is located here:" & vbCrLf & vbCrLf & augWbPath
+    Debug.Print augWbPath & "\" & Dir(augWbPath & "\" & "*auger*.xls*")
     On Error GoTo errhandler
     
     If nuM > 0 Then
@@ -652,7 +653,7 @@ On Error GoTo errhandler
 
 'path designations
 ''''''''''''''''''
-augWbPath = "bw1-my.sharepoint.com/personal/tyler_england_bwpackagingsystems_com/Documents/Tools"
+augWbPath = "\\Psaclw02\Home\Applications\Applications-Share\Quotes\Mateer\Templates\Calculators"
 costBookPath = "\\PSACLW02\Home\Applications\Applications-Docs\Pricing\Mateer\"
 priceBookPath = costBookPath
 ''''''''''''''''''
@@ -837,12 +838,13 @@ Else
         Set augWB = Workbooks("Mateer_Auger_Output_Data.xlsx")
         If augWB Is Nothing Then
             If InStr(augWbPath, "/") > 0 Then
-                Set augWB = Workbooks.Open(Filename:=augWbPath & "/" & Mateer_Auger_Output_Data.xlsx)
+                Set augWB = Workbooks.Open(Filename:=augWbPath & "/Mateer_Auger_Output_Data.xlsx")
             Else
                 Set augWB = Workbooks.Open(Filename:=augWbPath & "\" & Dir(augWbPath & "\" & "*auger*.xls*"))
             End If
         End If
         If augWB Is Nothing Then MsgBox "Unable to open Auger Output Data workbook. Located here:" & vbCrLf & vbCrLf & augWbPath
+        Debug.Print augWbPath & "\" & Dir(augWbPath & "\" & "*auger*.xls*")
         On Error GoTo errhandler
         
         ThisWorkbook.Activate
